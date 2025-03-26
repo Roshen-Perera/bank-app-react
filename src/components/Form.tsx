@@ -23,7 +23,7 @@ const accountType = [
     { label: "Fixed Deposit" },
 ];
 
-export default function AddressForm() {
+export default function Form() {
   return (
     <Grid container spacing={2}>
       <FormGrid size={{ xs: 12 }}>
