@@ -1,4 +1,4 @@
-import { Autocomplete } from "@mui/material";
+import { Autocomplete, Button } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
@@ -25,7 +25,7 @@ const accountType = [
 
 export default function AddressForm() {
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={2}>
       <FormGrid size={{ xs: 12 }}>
         <TextField label="Full name" id="fullName" />
       </FormGrid>
@@ -78,6 +78,7 @@ export default function AddressForm() {
           label="I agree to the Terms & Conditions"
         />
       </FormGrid>
+      <Button variant="contained">Submit</Button>
     </Grid>
   );
 }
