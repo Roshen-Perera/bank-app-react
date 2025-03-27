@@ -29,21 +29,28 @@ const schema = z.object({
   dob: z
     .string()
     .min(1, { message: "This field has to be filled." }) // Required field
-    .refine((dob) => {
-      const birthDate = new Date(dob);
-      const today = new Date();
-      const age = today.getFullYear() - birthDate.getFullYear();
-      const isBirthdayPassed =
-        today.getMonth() > birthDate.getMonth() ||
-        (today.getMonth() === birthDate.getMonth() && today.getDate() >= birthDate.getDate());
+    .refine(
+      (dob) => {
+        const birthDate = new Date(dob);
+        const today = new Date();
+        const age = today.getFullYear() - birthDate.getFullYear();
+        const isBirthdayPassed =
+          today.getMonth() > birthDate.getMonth() ||
+          (today.getMonth() === birthDate.getMonth() &&
+            today.getDate() >= birthDate.getDate());
 
-      return age > 18 || (age === 18 && isBirthdayPassed); // Must be 18 or older
-    }, { message: "You must be at least 18 years old." }),  type: z.string(),
+        return age > 18 || (age === 18 && isBirthdayPassed); // Must be 18 or older
+      },
+      { message: "You must be at least 18 years old." }
+    ),
+  type: z.string(),
   deposit: z.number().min(100, { message: "Deposit must be at least 100" }), // Ensures minimum 100
   currency: z.string(),
   street: z.string().min(1, { message: "This field has to be filled." }),
   city: z.string().min(1, { message: "This field has to be filled." }),
-  zip: z.number().min(5, { message: "Postal code must have 5 digits" }),
+  zip: z
+    .string()
+    .length(5, { message: "Zip code must be exactly 5 digits." }),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -153,12 +160,12 @@ export default function Form() {
         </FormGrid>
         <FormGrid size={{ xs: 4 }}>
           <TextField
-            {...register("zip")}
+            {...(register("zip"))}
             label="Zip Code"
             id="zip"
             type="number"
           />
-          {errors.zip && <Alert severity="error">{errors.zip.message}</Alert>}
+          {errors.zip && <Alert severity="error">{errors.zip.message}</Alert>}{" "}
         </FormGrid>
         <FormGrid size={{ xs: 12 }}>
           <FormControlLabel
