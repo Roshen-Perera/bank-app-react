@@ -1,14 +1,14 @@
-import { Autocomplete, Button } from "@mui/material";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Grid from "@mui/material/Grid";
+import { Alert, Autocomplete, Button, Checkbox, FormControlLabel, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
+import { useState } from "react";
 
 const FormGrid = styled(Grid)(() => ({
   display: "flex",
   flexDirection: "column",
 }));
+
+
 
 // Define the currency options
 const currency = [
@@ -24,6 +24,7 @@ const accountType = [
 ];
 
 export default function Form() {
+  const [name, setName] = useState("");
   return (
     <Grid container spacing={2}>
       <FormGrid size={{ xs: 12 }}>
@@ -78,7 +79,8 @@ export default function Form() {
           label="I agree to the Terms & Conditions"
         />
       </FormGrid>
-      <Button variant="contained">Submit</Button>
+
+      <Button variant="contained" onClick={() => setName("Button Clicked")}>Submit</Button>
     </Grid>
   );
 }
