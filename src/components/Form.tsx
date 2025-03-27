@@ -19,7 +19,14 @@ const FormGrid = styled(Grid)(() => ({
 
 const schema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters" }),
- 
+  email: z
+    .string()
+    .min(1, { message: "This field has to be filled." })
+    .email("This is not a valid email."),
+  number: z
+    .number()
+    .min(1000000000, { message: "Phone number must be exactly 10 digits." }) // Ensures at least 10 digits
+    .max(9999999999, { message: "Phone number must be exactly 10 digits." }), // Ensures at most 10 digits
 });
 
 type FormData = z.infer<typeof schema>;
@@ -55,16 +62,21 @@ export default function Form() {
           {errors.name && <Alert severity="error">{errors.name.message}</Alert>}
         </FormGrid>
         <FormGrid size={{ xs: 12 }}>
-          <TextField  label="Email address" id="email" />
-
-    
+          <TextField {...register("email")} label="Email address" id="email" />
+          {errors.email && (
+            <Alert severity="error">{errors.email.message}</Alert>
+          )}
         </FormGrid>
         <FormGrid size={{ xs: 6 }}>
           <TextField
+            {...(register("number"), { valueAsNumber: true })}
             label="Phone Number"
             id="phoneNumber"
             type="number"
           />
+          {errors.number && (
+            <Alert severity="error">{errors.number.message}</Alert>
+          )}
         </FormGrid>
         <FormGrid size={{ xs: 6 }}>
           <TextField
