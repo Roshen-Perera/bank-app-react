@@ -26,6 +26,7 @@ const schema = z.object({
   phonenumber: z
     .string()
     .length(10, { message: "Phone number must be exactly 10 digits." }),
+  dob: z.string(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -68,7 +69,7 @@ export default function Form() {
         </FormGrid>
         <FormGrid size={{ xs: 6 }}>
           <TextField
-            {...(register("phonenumber"))}
+            {...register("phonenumber")}
             label="Phone Number"
             id="phoneNumber"
             type="number"
@@ -79,12 +80,13 @@ export default function Form() {
         </FormGrid>
         <FormGrid size={{ xs: 6 }}>
           <TextField
-            fullWidth
+            {...register("dob")}
             label="Date of Birth"
             id="dob"
             type="date"
             InputLabelProps={{ shrink: true }}
           />
+          {errors.dob && <Alert severity="error">{errors.dob.message}</Alert>}
         </FormGrid>
         <FormGrid size={{ xs: 4 }}>
           <Autocomplete
