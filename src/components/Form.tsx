@@ -48,9 +48,10 @@ const schema = z.object({
   currency: z.string(),
   street: z.string().min(1, { message: "This field has to be filled." }),
   city: z.string().min(1, { message: "This field has to be filled." }),
-  zip: z
-    .string()
-    .length(5, { message: "Zip code must be exactly 5 digits." }),
+  zip: z.string().length(5, { message: "Zip code must be exactly 5 digits." }),
+  submitForm: z.boolean().refine((value) => value === true, {
+    message: "You must agree to the Terms & Conditions",
+  }),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -160,7 +161,7 @@ export default function Form() {
         </FormGrid>
         <FormGrid size={{ xs: 4 }}>
           <TextField
-            {...(register("zip"))}
+            {...register("zip")}
             label="Zip Code"
             id="zip"
             type="number"
@@ -169,9 +170,18 @@ export default function Form() {
         </FormGrid>
         <FormGrid size={{ xs: 12 }}>
           <FormControlLabel
-            control={<Checkbox name="submitForm" value="yes" />}
+            control={
+              <Checkbox
+                {...register("submitForm")}
+                name="submitForm"
+                value="yes"
+              />
+            }
             label="I agree to the Terms & Conditions"
           />
+          {errors.submitForm && (
+            <Alert severity="error">{errors.submitForm.message}</Alert>
+          )}{" "}
         </FormGrid>
 
         <Button variant="contained" type="submit">
