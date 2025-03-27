@@ -26,7 +26,20 @@ const schema = z.object({
   phonenumber: z
     .string()
     .length(10, { message: "Phone number must be exactly 10 digits." }),
-  dob: z.string(),
+  dob: z
+    .string()
+    .min(1, { message: "This field has to be filled." }) // Required field
+    .refine((dob) => {
+      const birthDate = new Date(dob);
+      const today = new Date();
+      const age = today.getFullYear() - birthDate.getFullYear();
+      const isBirthdayPassed =
+        today.getMonth() > birthDate.getMonth() ||
+        (today.getMonth() === birthDate.getMonth() && today.getDate() >= birthDate.getDate());
+
+      return age > 18 || (age === 18 && isBirthdayPassed); // Must be 18 or older
+    }, { message: "You must be at least 18 years old." }),  type: z.string(),
+  deposit: z.number().min(100, { message: "Deposit must be at least 100" }), // Ensures minimum 100
 });
 
 type FormData = z.infer<typeof schema>;
@@ -91,25 +104,30 @@ export default function Form() {
         <FormGrid size={{ xs: 4 }}>
           <Autocomplete
             disablePortal
+            {...register("type")}
             options={accountType}
             renderInput={(params) => (
               <TextField {...params} label="Account Type" />
             )}
           />{" "}
+          {errors.type && <Alert severity="error">{errors.type.message}</Alert>}
         </FormGrid>
         <FormGrid size={{ xs: 4 }}>
           <TextField
+            {...register("deposit", { valueAsNumber: true })}
             label="Initial Deposit Amount"
             id="deposit"
             type="number"
           />
+          {errors.deposit && (
+            <Alert severity="error">{errors.deposit.message}</Alert>
+          )}
         </FormGrid>
         <FormGrid size={{ xs: 4 }}>
           <Autocomplete
-            disablePortal
             options={currency}
             renderInput={(params) => <TextField {...params} label="Currency" />}
-          />{" "}
+          />
         </FormGrid>
         <FormGrid size={{ xs: 4 }}>
           <TextField fullWidth label="Street Address" id="street" />
