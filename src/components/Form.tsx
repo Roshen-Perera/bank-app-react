@@ -40,6 +40,7 @@ const schema = z.object({
       return age > 18 || (age === 18 && isBirthdayPassed); // Must be 18 or older
     }, { message: "You must be at least 18 years old." }),  type: z.string(),
   deposit: z.number().min(100, { message: "Deposit must be at least 100" }), // Ensures minimum 100
+  currency: z.string(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -125,9 +126,13 @@ export default function Form() {
         </FormGrid>
         <FormGrid size={{ xs: 4 }}>
           <Autocomplete
+            {...register("currency")}
             options={currency}
             renderInput={(params) => <TextField {...params} label="Currency" />}
           />
+          {errors.currency && (
+            <Alert severity="error">{errors.currency.message}</Alert>
+          )}
         </FormGrid>
         <FormGrid size={{ xs: 4 }}>
           <TextField fullWidth label="Street Address" id="street" />
