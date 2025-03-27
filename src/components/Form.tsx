@@ -42,6 +42,7 @@ const schema = z.object({
   deposit: z.number().min(100, { message: "Deposit must be at least 100" }), // Ensures minimum 100
   currency: z.string(),
   street: z.string().min(1, { message: "This field has to be filled." }),
+  city: z.string().min(1, { message: "This field has to be filled." }),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -146,7 +147,10 @@ export default function Form() {
           )}
         </FormGrid>
         <FormGrid size={{ xs: 4 }}>
-          <TextField fullWidth label="City" id="city" />
+          <TextField {...register("city")} label="City" id="city" />
+          {errors.city && (
+            <Alert severity="error">{errors.city.message}</Alert>
+          )}
         </FormGrid>
         <FormGrid size={{ xs: 4 }}>
           <TextField fullWidth label="Zip Code" id="zip" type="number" />
