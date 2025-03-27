@@ -23,10 +23,9 @@ const schema = z.object({
     .string()
     .min(1, { message: "This field has to be filled." })
     .email("This is not a valid email."),
-  number: z
-    .number()
-    .min(1000000000, { message: "Phone number must be exactly 10 digits." }) // Ensures at least 10 digits
-    .max(9999999999, { message: "Phone number must be exactly 10 digits." }), // Ensures at most 10 digits
+  phonenumber: z
+    .string()
+    .length(10, { message: "Phone number must be exactly 10 digits." }),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -69,13 +68,13 @@ export default function Form() {
         </FormGrid>
         <FormGrid size={{ xs: 6 }}>
           <TextField
-            {...(register("number"), { valueAsNumber: true })}
+            {...(register("phonenumber"))}
             label="Phone Number"
             id="phoneNumber"
             type="number"
           />
-          {errors.number && (
-            <Alert severity="error">{errors.number.message}</Alert>
+          {errors.phonenumber && (
+            <Alert severity="error">{errors.phonenumber.message}</Alert>
           )}
         </FormGrid>
         <FormGrid size={{ xs: 6 }}>
