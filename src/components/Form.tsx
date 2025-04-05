@@ -78,6 +78,7 @@ export default function Form() {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<FormData>({ resolver: zodResolver(schema) });
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -115,13 +116,19 @@ export default function Form() {
         </FormGrid>
         <FormGrid size={{ xs: 4 }}>
           <Autocomplete
-            disablePortal
-            {...register("type")}
+            {...register("type", { required: "Please select a type" })} // Register with react-hook-form
             options={accountType}
+            getOptionLabel={(option) => option.label}
+            onChange={(_, value) => value && setValue("type", value.label)} // Update value in the form state
             renderInput={(params) => (
-              <TextField {...params} label="Account Type" />
+              <TextField
+                {...params}
+                label="Type of Account"
+                error={!!errors.type} // Display error styling if validation fails
+                helperText={errors.type?.message} // Show error message
+              />
             )}
-          />{" "}
+          />
           {errors.type && <Alert severity="error">{errors.type.message}</Alert>}
         </FormGrid>
         <FormGrid size={{ xs: 4 }}>
@@ -137,9 +144,18 @@ export default function Form() {
         </FormGrid>
         <FormGrid size={{ xs: 4 }}>
           <Autocomplete
-            {...register("currency")}
+            {...register("currency", { required: "Please select a currency" })} // Register with react-hook-form
             options={currency}
-            renderInput={(params) => <TextField {...params} label="Currency" />}
+            getOptionLabel={(option) => option.label}
+            onChange={(_, value) => value && setValue("currency", value.label)} // Update value in the form state
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Currency"
+                error={!!errors.currency} // Display error styling if validation fails
+                helperText={errors.currency?.message} // Show error message
+              />
+            )}
           />
           {errors.currency && (
             <Alert severity="error">{errors.currency.message}</Alert>
