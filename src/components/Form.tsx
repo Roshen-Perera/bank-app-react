@@ -174,7 +174,7 @@ export default function Form() {
               <Checkbox
                 {...register("submitForm")}
                 name="submitForm"
-                value="yes"
+                defaultChecked={false}
               />
             }
             label="I agree to the Terms & Conditions"
